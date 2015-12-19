@@ -26,28 +26,35 @@ class user_ip_handler(base_handler):
 class login_handler(base_handler):
     def post(self):
         name = self.get_json_argument('name')
-        passwd = self.get_json_argument('passwd')
-        if name == passwd:
-            self.set_secure_cookie('user', str(1))
+        password = self.get_json_argument('password')
+        print('%s, %s' % (name, password))
+        user = User.objects.get(name=name, password=password)
+        if user:
+            self.set_secure_cookie('user_id', str(user.id))
             self.write(empty)
         else:
-            raise tornado.web.HTTPError(403)
+            #raise tornado.web.HTTPError(403)
+            self.write('{"error": error}')
 
 class user_info_handler(base_handler):
     def get(self):
+        user_id = self.get_secure_cookie('user_id').decode()
+        user = User.get_by_id(user_id)
+        if not user:
+            self.write('{"error": error}')
+            self.finish()
         content = {
-                'name' : 'admin',
-                'position' : 'CEO',
-                'priority' : 1,
+                'name' : user.name,
+                'position' : user.position,
+                'priority' : user.priority,
                 }
-
         resp = json.dumps(content)
         self.write(resp)
 
 class user_add(base_handler):
     def post(self):
         user = User(name = self.get_json_argument('name'),
-                passwd = self.get_json_argument('passwd'),
+                passwd = self.get_json_argument('password'),
                 priority = self.get_json_argument('priority')
                 )
         user.save()

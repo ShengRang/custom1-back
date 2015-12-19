@@ -1,6 +1,7 @@
 import tornado.web
 import json
 from tornado_cors import CorsMixin
+from models import User
 
 class base_handler(CorsMixin, tornado.web.RequestHandler):
     # Value for the Access-Control-Allow-Origin header.
@@ -22,7 +23,8 @@ class base_handler(CorsMixin, tornado.web.RequestHandler):
     CORS_MAX_AGE = 21600
 
     def get_current_user(self):
-       return self.get_secure_cookie('user', 0)
+       id = self.get_secure_cookie('user')
+       return User.get_by_id(id)
 
     def get_json_argument(self, name):
         return json.loads(self.request.body.decode("utf-8") )[name]
@@ -32,4 +34,3 @@ class forbiden_handler(base_handler):
         raise tornado.web.HTTPError(403)
     def post(self):
         raise tornado.web.HTTPError(403)
-

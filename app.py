@@ -47,7 +47,7 @@ class Application(tornado.web.Application):
 
 if __name__ == '__main__':
     tornado.options.parse_command_line()
-    connect(options.mongo_database, host=options.mongo_host)
+    #connect(options.mongo_database, host=options.mongo_host)
     http_server = tornado.httpserver.HTTPServer(Application())
     http_server.listen(options.port)
     instance = tornado.ioloop.IOLoop.instance()

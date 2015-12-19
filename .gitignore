@@ -60,3 +60,5 @@ target/
 
 # Fuck Mac
 .DS_Store
+
+test/
