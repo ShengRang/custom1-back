@@ -40,6 +40,7 @@ class user_info_handler(base_handler):
                 'position' : 'CEO',
                 'priority' : 1,
                 }
+
         resp = json.dumps(content)
         self.write(resp)
 

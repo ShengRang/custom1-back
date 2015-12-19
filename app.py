@@ -17,8 +17,8 @@ from mongoengine import connect
 define("port", default=8888, help="run on the given port", type=int)
 define("debug",default=True,help="Debug Mode",type=bool)
 connect('test')
-# define("mongo_host", default="127.0.0.1:3306", help="database host")
-# define("mongo_database", default="quora", help="database name")
+define("mongo_host", default="127.0.0.1:27017", help="database host")
+define("mongo_database", default="quora", help="database name")
 
 class Application(tornado.web.Application):
     def __init__(self):
@@ -47,9 +47,9 @@ class Application(tornado.web.Application):
 
 if __name__ == '__main__':
     tornado.options.parse_command_line()
+    connect(options.mongo_database, host=options.mongo_host)
     http_server = tornado.httpserver.HTTPServer(Application())
     http_server.listen(options.port)
     instance = tornado.ioloop.IOLoop.instance()
     tornado.autoreload.start(instance)
     instance.start()
-
